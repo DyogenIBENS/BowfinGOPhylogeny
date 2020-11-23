@@ -1,0 +1,15 @@
+name: bowfin_env
+channels:
+  - conda-forge
+dependencies:
+  - biopython
+  - numpy
+  - matplotlib
+  - seaborn
+  - ete3
+  - pandas
+  - scipy
+  - statsmodels
+  - r-base=3.6
+  - r-ape
+  - rpy2
