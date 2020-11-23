@@ -10,6 +10,6 @@ dependencies:
   - pandas
   - scipy
   - statsmodels
-  - r-base=3.6
+  - r-base=4.0
   - r-ape
   - rpy2
