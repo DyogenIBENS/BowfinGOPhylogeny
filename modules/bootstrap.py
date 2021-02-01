@@ -54,9 +54,8 @@ def bootstrap_matrix(all_adj, all_species, sp_dict):
                 if i == 0:
                     res += line[2:]
                 else:
-                    res+=line
+                    res += line
             fw.write(res)
-    print(f'{k+1} bootstrap replicates done')
 
 
 def add_bootstrap_support(tree, bootstrap_trees):

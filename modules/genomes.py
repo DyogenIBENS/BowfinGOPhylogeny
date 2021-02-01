@@ -12,6 +12,10 @@ def extract_all_genes(genefile):
     Arg:
         genefile (str): name of the input gene coordinate file in DYOGEN format.
 
+    Returns:
+        (set) : full genes set
+        (set) : subset of genes on random contig
+
     """
 
     sp_genes = set()
@@ -34,7 +38,10 @@ def filter_families(genes_allsp, non_dup_sp, input_file, output_file):
     Intermediary output files with these families are written for further inspection.
 
     Args:
-
+        genes_allsp (dict): for each species (key) its genes as a set (value)
+        non_dup_sp (list of str): name of non-duplicated species
+        input_file (str): name of the ancgene family file (DYOGEN format).
+        output_file (str): path to the output file where to write the subset of gene families
     """
 
     count_genes = {}
@@ -102,6 +109,14 @@ def read(input_file, genes_on_random):
 
     """
     Loads a families file.
+
+    Args:
+        input_file (str): family file to load
+        genes_on_random (set): genes on a random contig
+
+    Returns:
+        (dict): families defined by ancgene name (key) and a corresponding unique ID (value)
+        (list): unique ID of families with a member on random contig
     """
 
     families = {}
@@ -120,11 +135,17 @@ def read(input_file, genes_on_random):
 
 
 def write_genomes(name_families, genefile, all_species, outfile):
+
     """
     Write genomes in a multiple fasta format with genes ordered along chromsomes, with chromosome
-    ends indicated by `$`. Returns a dictionary storing all gene adjacencies for each species.
+    ends indicated by `$`. Also returns a dictionary storing all gene adjacencies for each species.
 
-
+    Args:
+        name_families (dict) : selected ancgenes (key) and their unique ID (value)
+        genefile (str) : path to gene coordinates files in DYOGEN format
+        all_species (list of str): name of species to consider, used to find corresponding
+                                   genefiles.
+        outfile (str): path to the output multi-fasta genome files.
     """
 
     #start by emptying the outfile in case it exists, since we will append to it in a loop.
