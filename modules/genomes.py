@@ -50,7 +50,7 @@ def filter_families(genes_allsp, non_dup_sp, input_file, output_file):
     with bz2.open(input_file, "rt") as infile, open(output_file, 'w') as outfile,\
          open('output/Families_1-to-1.tsv', 'w') as fw1,\
          open('output/Families_1-to-2.tsv', 'w') as fw2,\
-         open('Families_all.tsv', 'w') as fw3:
+         open('output/Families_all.tsv', 'w') as fw3:
 
         #go through all families
         for line in infile:

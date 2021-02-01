@@ -245,7 +245,7 @@ def dict_to_mat(d_adj_all, all_species, unrandom, sp_with_rm, gar=None, bowfin=N
 def make_binary_adj_matrix(adj_list, adj_list_rev, all_species, unrandom=None, sp_with_rm=None,
                            print_count=True):
     """
-    Makes a binary matrix af gene adjacencies absence/presence. Will be used for plot and bootstrap.
+    Makes a binary matrix af gene adjacencies absence/presence. Will be used for bootstrap.
 
     Args:
         adj_list (dict) :
