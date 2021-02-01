@@ -14,17 +14,17 @@ import random
 random.seed(1234)
 
 
-def bootstrap_matrix(all_adj, all_species):
+def bootstrap_matrix(all_adj, all_species, sp_dict):
     """
     Bootstrap the binary matrix 100 times and transform to 100 distance matrix.
     """
-    A = np.array(all_adj,dtype=int)
+    A = np.array(all_adj, dtype=int)
     for k in range(100):
 
         dmat = np.zeros((len(all_species),len(all_species)))
         all_vect = range(int(len(all_adj)))
-        if k%10 == 0 and k != 0:
-            print(f'{k} bootstrap replicates done')
+        if (k+1)%10 == 0:
+            print(f'{k+1} bootstrap replicates done')
         boot_indices = [random.choice(all_vect) for _ in range(int(len(all_adj)))]
         boot_replicate = A[boot_indices,:]
 
@@ -56,7 +56,7 @@ def bootstrap_matrix(all_adj, all_species):
                 else:
                     res+=line
             fw.write(res)
-    print(f'{k} bootstrap replicates done')
+    print(f'{k+1} bootstrap replicates done')
 
 
 def add_bootstrap_support(tree, bootstrap_trees):
@@ -64,18 +64,20 @@ def add_bootstrap_support(tree, bootstrap_trees):
     Add bootstrap support to the NJ tree.
     """
     diff_bl = []
+
+
     #root all trees
     for treename in [tree] + bootstrap_trees:
         t = Tree(treename)
-        lca = t.get_common_ancestor(['Gallus','Xenopus'])
+        lca = t.get_common_ancestor(['Chicken', 'Xenopus'])
         t.set_outgroup(lca)
-        if not t.check_monophyly(values=['Lepisosteus','Amia'], target_attr="name")[0]:
+        if not t.check_monophyly(values=['Gar', 'Bowfin'], target_attr="name")[0]:
             print(t)
             
         else:
-            ac = t.get_common_ancestor(['Lepisosteus','Amia'])
-            b_gar = t.get_distance(ac,'Lepisosteus')
-            b_bow = t.get_distance(ac,'Amia')
+            ac = t.get_common_ancestor(['Gar', 'Bowfin'])
+            b_gar = t.get_distance(ac, 'Gar')
+            b_bow = t.get_distance(ac, 'Bowfin')
             diff_bl.append(b_bow-b_gar)
 
         t.write(outfile=treename)
@@ -83,10 +85,10 @@ def add_bootstrap_support(tree, bootstrap_trees):
     mytrees = [Phylo.read(t, "newick") for t in bootstrap_trees]
 
 
-    target = Phylo.read(tree,'newick')
-    majority_tree = get_support(target,mytrees)
+    target = Phylo.read(tree, 'newick')
+    majority_tree = get_support(target, mytrees)
 
-    Phylo.draw_ascii(majority_tree)
+    # Phylo.draw_ascii(majority_tree)
     Phylo.write(majority_tree, 'output/bootstrap_consensus.nwk', 'newick')
 
     #remove Bio.Phylo formatting that does not work with ete3 conventions...
@@ -94,7 +96,8 @@ def add_bootstrap_support(tree, bootstrap_trees):
         t = f.readlines()[0]
     t = t.replace('):',')')
 
-    with open('output/bootstrap_consensus_f.nwk','w') as f:
+    with open('output/bootstrap_consensus.nwk','w') as f:
         f.write(t)
         
-    return diff_bl
+    # return diff_bl
+    return
