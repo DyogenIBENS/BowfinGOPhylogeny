@@ -19,17 +19,26 @@ from ete3 import Tree
 
 
 def bootstrap_matrix(all_adj, all_species, sp_dict):
+
     """
-    Bootstrap the binary matrix 100 times and transform to 100 distance matrix.
+    Bootstraps the binary matrix 100 times and builds 100 corresponding distance matrices.
+    Distance matrixes are saved to file in `output/bootstrap/`.
+
+    Args:
+        all_adj (list of list) : binary adjacency matrix, each sublist is a presence/absence vector,
+                                 species index in columns are given by theh `all_species` argument.
+        all_species (list) : list of species in the matrix (i.e column names)
+        sp_dict (dict) : dict giving latin (key) to common (value) species name (for plot)
     """
+
     bin_mat = np.array(all_adj, dtype=int)
     for k in range(100):
 
         dmat = np.zeros((len(all_species), len(all_species)))
-        all_vect = range(len(all_adj))
+        # all_vect = range(len(all_adj))
         if (k+1)%10 == 0:
             print(f'{k+1} bootstrap replicates done')
-        boot_indices = [random.choice(all_vect) for _ in range(len(all_adj))]
+        boot_indices = np.random.choice(len(all_adj), len(all_adj))
         boot_replicate = bin_mat[boot_indices, :]
 
         for i, j in list(itertools.combinations(all_species, 2)):
@@ -39,8 +48,9 @@ def bootstrap_matrix(all_adj, all_species, sp_dict):
 
             nb_sim = len(np.logical_and(boot_replicate[:, i], boot_replicate[:, j]).nonzero()[0])
 
-            max1 = len([a for a in boot_replicate[:, i] if a == 1])
-            max2 = len([a for a in boot_replicate[:, j] if a == 1])
+            max1 = sum(boot_replicate[:, i])
+            max2 = sum(boot_replicate[:, j])
+
             dmat[i, j] = 1 - nb_sim/float(min(max1, max2))
             dmat[j, i] = dmat[i, j]
 
@@ -60,12 +70,27 @@ def bootstrap_matrix(all_adj, all_species, sp_dict):
                 else:
                     res += line
             out.write(res)
+    print("DONE")
 
 
 def add_bootstrap_support(tree, bootstrap_trees, root=True, branch_length_diff=None):
+
     """
-    Add bootstrap support to the NJ tree.
+    Adds bootstrap support to a target phylogenetic tree, using bootstraped trees.
+    The resulting tree with support values is written in `output/ete3_formatted_bootstrap_tree.nwk`
+
+    Args:
+        tree
+        boostrap_trees
+        root (boolean, optional) : Whether to root the tree using Xenopus and Chicken.
+        branch_length_diff (list of tuples, optional): species pair for which to extract branch
+                                                       length difference from bootstrap trees
+
+    Returns:
+        (dict) : for each species pair (key) a list of branch length differences (value)
+                 in bootstraped trees
     """
+
     diff_bl = {}
 
 
@@ -85,14 +110,13 @@ def add_bootstrap_support(tree, bootstrap_trees, root=True, branch_length_diff=N
 
         if not mytree.check_monophyly(values=['Gar', 'Bowfin'], target_attr="name")[0]:
             print(mytree)
-
         if branch_length_diff:
             for species_pair in branch_length_diff:
                 sp1, sp2 = species_pair
                 ancestor = mytree.get_common_ancestor([sp1, sp2])
                 branch_sp1 = mytree.get_distance(ancestor, sp1)
                 branch_sp2 = mytree.get_distance(ancestor, sp2)
-                diff = branch_sp2 - branch_sp1
+                diff = branch_sp1 - branch_sp2
                 diff_bl[species_pair] = diff_bl.get(species_pair, [])
                 diff_bl[species_pair].append(diff)
 

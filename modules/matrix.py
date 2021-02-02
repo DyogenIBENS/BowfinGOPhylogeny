@@ -1,6 +1,6 @@
 """
 
-Module with function to build distance matrix from adjacencies data.
+Module with function to build a distance matrix from adjacencies data.
 
 """
 
@@ -15,12 +15,20 @@ import seaborn as sns
 sns.set_style("white")
 
 
-
 def indx_of_gene(ch, gene):
+
     """
-    Return the relative position of a gene on a chromosome.
+    Returns the relative position of a gene on a chromosome.
     None if absent.
+
+    Args:
+        ch (list of int): chromosome as a list of genes
+        gene (int): gene ID
+
+    Returns:
+        (int): index of gene on chromosomes.
     """
+
     indx = None
 
     if gene in ch or -1*gene in ch:
@@ -36,8 +44,17 @@ def indx_of_gene(ch, gene):
 def adj_of_neighbors(ch, gene, gene_r, gene_l):
 
     """
-    Search if an ortiented triplet gene_r, gene, gene_l in a duplicated species is in the same order
-    in a non-duplicated species.
+    Helper function to search for relaxed adjacencies between a non-duplicated species and a
+    duplicated species. Checks whether an oriented triplet gene_r, gene, gene_l in a duplicated
+    species is in the same order in a non-duplicated specied species, and is less than 10 genes
+    apart.
+
+    Args:
+        ch (list of int): considered chromosome of the non-duplicated species, as a list of genes
+        gene, gene_r, gene_l (str): genes of the oriented triplet to search
+
+    Returns:
+        (int): whether the triplet exists in the same order in the non-duplicated species
     """
 
     ok = False
@@ -70,7 +87,25 @@ def adj_of_neighbors(ch, gene, gene_r, gene_l):
 def correct_frac_bias(adj_list, adj_list_rev, all_species, d_seq, non_dup):
 
     """
-    Try to correct adjacencies absent of a duplicated species because of post-WGD fractionation.
+    Searches for adjacencies absent in a duplicated species because of post-WGD fractionation.
+    For each adj present in a non-duplicated species, if gene losses are responsible for breaking
+    the adjacency, rather than rearrangements, then the adj is counted as present in the duplicated
+    species.
+
+    More precisely, for an adjacency B-C in a non-duplicated species which corresponds
+    to I-B-K and X-C-Y triplets in a duplicated species, if the triplets are found in the same order
+    and at a distance < 10 genes in the duplicated species, then the adjaency is considered as
+    broken by gene losses.
+
+    The adjacency dicts `adj_list` and `adj_list_rev` are updated in-place.
+
+    Args:
+        adj_list, adj_list_rev (dicts): for each species (key), the list of adjacencies in each
+                                        direction (value)
+        all_species (list) : list of species to consider
+        d_seq (dict): for each species (key) a list of lists (value), giving,
+                      for each chromomsome (or scaffold), an ordered list of genes.
+        non_dup (list): list of non-duplicated species
     """
 
     for non_dup_sp in non_dup:
@@ -120,16 +155,25 @@ def correct_frac_bias(adj_list, adj_list_rev, all_species, d_seq, non_dup):
 
                     if ok:
 
-                        adj_list[dup_sp].append(adj)
+                        adj_list[dup_sp].add(adj)
 
-                        adj_list_rev[dup_sp].append((adj[1]*-1, adj[0]*-1))
+                        adj_list_rev[dup_sp].add((adj[1]*-1, adj[0]*-1))
 
 
-def make_distance_matrix(adj_list, adj_list_rev, sp_dict, all_species):
+def make_distance_matrix(adj_list, adj_list_rev, sp_dict, all_species, show=True):
 
     """
-    Make a distance matrix and draw it.
+    Makes a distance matrix from adjacencies data using a normalized breakpoint distance
+    (1 - proportion of shared adjacencies) and draws it.
+
+    Args:
+        adj_list, adj_list_rev (dicts): for each species (key), the list of adjacencies in each
+                                        direction (value)
+        sp_dict (dict) : dict giving latin (key) to common (value) species name (for plot)
+        all_species (list) : list of species to consider
+        show (boolean): whether or not to show the plot
     """
+
     all_species_pairs = list(itertools.combinations(all_species, 2))
     mat = np.zeros((len(all_species), len(all_species)))
     for pair in all_species_pairs:
@@ -152,18 +196,22 @@ def make_distance_matrix(adj_list, adj_list_rev, sp_dict, all_species):
                            index=[sp_dict[i.split()[0]] for i in all_species])
 
 
-    # Set up the matplotlib figure
+    #set up the matplotlib figure
     _, _ = plt.subplots(figsize=(8, 8))
 
-    # Draw the heatmap
+    #draw the heatmap
     sns.heatmap(df_data, cmap=sns.cm.rocket, square=True, vmin=0, vmax=1)
 
     plt.tight_layout()
     plt.savefig('output/distance_matrix.svg', dpi=300)
 
-    plt.show()
+    if show:
 
-    #save the matrix
+        plt.show()
+
+    plt.close('all')
+
+    #save the matrix as text
     np.savetxt('output/dist_mat.txt', mat,
                header=' '.join([sp_dict[i.split()[0]].replace(' ', '_') for i in all_species]))
 

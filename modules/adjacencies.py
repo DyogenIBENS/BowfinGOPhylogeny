@@ -95,8 +95,9 @@ def get_adj(adj_list, adj_list_rev, d_adj_all, pair):
 
     Args:
         adj_list, adj_list_rev (dicts): for each species (key), the list of adjacencies in each
-                                        direction
-        d_adj_all (dict): resultung dict, filed-in place with the current species pair
+                                        direction (value)
+        d_adj_all (dict): resultung dict, filed-in place with the current species pair : for each
+                          adjacency (key) the set of species that have it (value)
         pair (tuple of strings): species pair considered
 
     """
@@ -154,11 +155,11 @@ def dict_to_mat(d_adj_all, all_species, unrandom, sp_with_rm, gar=None, bowfin=N
     adjacencies.
 
     Args:
-        d_adj_all (dict)
+        d_adj_all (dict) : for each adjacency (key) the set of species that have it (value)
         all_species (list) : list of species to consider
         unrandom (list of tuple): list of adjacencies on random contig to discard
         sp_with_rm (string): name of species for which to discard adj on random contig
-        gar, bowfin, chicken, xenopus : index of relevant species in `all_species`
+        gar, bowfin, chicken, xenopus : index of relevant species in `all_species` (to print counts)
 
     Returns:
         (list of list) : binary adjacency matrix, each sublist is a presence/absence vector, species
@@ -248,8 +249,8 @@ def make_binary_adj_matrix(adj_list, adj_list_rev, all_species, unrandom=None, s
     Makes a binary matrix af gene adjacencies absence/presence. Will be used for bootstrap.
 
     Args:
-        adj_list (dict) :
-        adj_list_rev (dict) :
+        adj_list, adj_list_rev (dicts): for each species (key), the list of adjacencies in each
+                                        direction (value)
         all_species (list) : list of species to consider
         unrandom (list) : list of families on random contig
         sp_with_rm (str) : species with random contig (currently support for only one species)
