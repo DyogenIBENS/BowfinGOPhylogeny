@@ -8,7 +8,6 @@ import os
 
 import re
 import itertools
-import random
 
 import numpy as np
 
