@@ -72,12 +72,12 @@ def save_all_adj(d_seq, to_ignore=None, sp_with_ign=None):
 
                     #since all tetraodon scaffolds are randomly assebled into a single contig
                     #discard those adjacencies on random contig that exist only in Tetraodon
-                    if to_ignore and sp_with_ign and sp == sp_with_ign\
-                       and ((int(chrom[i])), (int(chrom[i+1]))) not in to_ignore\
-                       and ((int(chrom[i+1]))*-1, (int(chrom[i]))*-1) not in to_ignore:
+                    if to_ignore and sp_with_ign and sp == sp_with_ign:
+                        if ((int(chrom[i])), (int(chrom[i+1]))) not in to_ignore\
+                        and ((int(chrom[i+1]))*-1, (int(chrom[i]))*-1) not in to_ignore:
 
-                        adj_list[sp].add((int(chrom[i]), int(chrom[i+1])))
-                        adj_list_rev[sp].add((int(chrom[i+1])*-1, int(chrom[i])*-1))
+                            adj_list[sp].add((int(chrom[i]), int(chrom[i+1])))
+                            adj_list_rev[sp].add((int(chrom[i+1])*-1, int(chrom[i])*-1))
 
                     else:
                         adj_list[sp].add((int(chrom[i]), int(chrom[i+1])))

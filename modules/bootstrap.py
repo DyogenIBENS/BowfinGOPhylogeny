@@ -80,8 +80,8 @@ def add_bootstrap_support(tree, bootstrap_trees, root=True, branch_length_diff=N
     The resulting tree with support values is written in `output/ete3_formatted_bootstrap_tree.nwk`
 
     Args:
-        tree
-        boostrap_trees
+        tree (str) : target tree file name
+        boostrap_trees (list of str) : path  to the bootstrapped trees
         root (boolean, optional) : Whether to root the tree using Xenopus and Chicken.
         branch_length_diff (list of tuples, optional): species pair for which to extract branch
                                                        length difference from bootstrap trees
@@ -108,8 +108,9 @@ def add_bootstrap_support(tree, bootstrap_trees, root=True, branch_length_diff=N
         if root:
             mytree.set_outgroup(lca)
 
-        if not mytree.check_monophyly(values=['Gar', 'Bowfin'], target_attr="name")[0]:
-            print(mytree)
+        # if not mytree.check_monophyly(values=['Gar', 'Bowfin'], target_attr="name")[0]:
+        #     print(mytree)
+
         if branch_length_diff:
             for species_pair in branch_length_diff:
                 sp1, sp2 = species_pair

@@ -185,7 +185,6 @@ def make_distance_matrix(adj_list, adj_list_rev, sp_dict, all_species, show=True
                 #check if exist in any of the two equivalent orientations
                 if adj in adj_list[pair[1]] or adj in adj_list_rev[pair[1]]:
                     mat[i, j] += 1
-                    mat[j, i] += 1
 
         mat[i, j] = 1 - mat[i, j]/float(min(len(adj_list[pair[0]]), len(adj_list[pair[1]])))
         mat[j, i] = mat[i, j]
