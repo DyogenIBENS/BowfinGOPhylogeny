@@ -40,6 +40,25 @@ def load_genomes(input_file):
 
     return d_seq
 
+def add_adj(adj_list, adj_list_rev, i, sp, chrom):
+
+    """
+    Adds adjacency at index i,i+1 of chromosome `chrom` of species `sp` to the adjacency dicts.
+    `adj_list` and `adj_list_rev` are updated in-place.
+
+    Args:
+         adj_list, adj_list_rev (dicts) : for each species (key) stores the list of adjacencies.
+         i (int): index of the first gene in the adjacency
+         sp (str): species
+         chrom (list): chromosome as an ordered list of genes
+    """
+
+    if (int(chrom[i+1])*-1, int(chrom[i])*-1) not in adj_list[sp]:
+        adj_list[sp].add((int(chrom[i]), int(chrom[i+1])))
+
+    if (int(chrom[i]), int(chrom[i+1])) not in adj_list_rev:
+        adj_list_rev[sp].add((int(chrom[i+1])*-1, int(chrom[i])*-1))
+
 
 def save_all_adj(d_seq, to_ignore=None, sp_with_ign=None):
 
@@ -76,12 +95,10 @@ def save_all_adj(d_seq, to_ignore=None, sp_with_ign=None):
                         if ((int(chrom[i])), (int(chrom[i+1]))) not in to_ignore\
                         and ((int(chrom[i+1]))*-1, (int(chrom[i]))*-1) not in to_ignore:
 
-                            adj_list[sp].add((int(chrom[i]), int(chrom[i+1])))
-                            adj_list_rev[sp].add((int(chrom[i+1])*-1, int(chrom[i])*-1))
-
+                            add_adj(adj_list, adj_list_rev, i, sp, chrom)
                     else:
-                        adj_list[sp].add((int(chrom[i]), int(chrom[i+1])))
-                        adj_list_rev[sp].add((int(chrom[i+1])*-1, int(chrom[i])*-1))
+
+                        add_adj(adj_list, adj_list_rev, i, sp, chrom)
 
     return adj_list, adj_list_rev
 

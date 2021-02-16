@@ -28,6 +28,12 @@ def bootstrap_matrix(all_adj, all_species, sp_dict):
                                  species index in columns are given by theh `all_species` argument.
         all_species (list) : list of species in the matrix (i.e column names)
         sp_dict (dict) : dict giving latin (key) to common (value) species name (for plot)
+
+    Note (#FIXME):
+        It is not very elegant that different functions compute the distance matrix for the original
+        data (see `modules/matrix.make_distance_matrix`) and the boostrapped matrices (here). I've
+        checked that implementations are identical (i.e same results for a given binary matrix),
+        but having a single function would be better.
     """
 
     bin_mat = np.array(all_adj, dtype=int)
@@ -37,6 +43,7 @@ def bootstrap_matrix(all_adj, all_species, sp_dict):
         # all_vect = range(len(all_adj))
         if (k+1)%10 == 0:
             print(f'{k+1} bootstrap replicates done')
+
         boot_indices = np.random.choice(len(all_adj), len(all_adj))
         boot_replicate = bin_mat[boot_indices, :]
 
@@ -56,11 +63,11 @@ def bootstrap_matrix(all_adj, all_species, sp_dict):
         os.makedirs("output/bootstrap/", exist_ok=True)
 
         #save matrix
-        np.savetxt('output/bootstrap/dist_mat.txt', dmat,
+        np.savetxt('output/bootstrap/dist_mat_tmp.txt', dmat,
                    header=' '.join([sp_dict[i.split()[0]].replace(' ', '_') for i in all_species]))
 
         #Format matrix for ape R package
-        with open('output/bootstrap/dist_mat.txt', 'r') as infile,\
+        with open('output/bootstrap/dist_mat_tmp.txt', 'r') as infile,\
              open('output/bootstrap/dist_mat_'+str(k)+'.txt', 'w') as out:
             res = ''
             for i, line in enumerate(infile):
