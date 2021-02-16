@@ -1,4 +1,4 @@
-name: bowfin_env
+name: bowfin_go
 channels:
   - conda-forge
 dependencies:
