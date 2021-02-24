@@ -1,6 +1,6 @@
 # BowfinGOPhylogeny - Bowfin Gene Order Phylogeny
 
-[![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/eparey/binder_test/HEAD)
+[![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/DyogenIBENS/BowfinGOPhylogeny.git/HEAD)
 
 **BowfinGOPhylogeny** is a repository to build distance-based gene-order phylogenies, based on the approach we used in [the bowfin genome paper](https://www.researchsquare.com/article/rs-92055/v1). The notebook shows how to use the python3 scripts stored in `modules/` in conjonction with standard tree building tools to reproduce the 13 ray-finned fish phylogeny we presented.
 
