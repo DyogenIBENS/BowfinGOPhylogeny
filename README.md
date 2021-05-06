@@ -41,6 +41,7 @@ jupyter notebook
 ## Authors
 
 * [**Elise Parey**](mailto:elise.parey@bio.ens.psl.eu)
+* **Alexandra Louis**
 * **Ingo Braasch**
 * **Hugues Roest Crollius**
 * **Camille Berthelot**
