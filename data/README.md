@@ -16,7 +16,7 @@ See the notebook `gene_order_phylogeny.ipynb` for implementation details.
 
 - As for Fig. 1c and Fig. 1d, for comparisons between bowfin, gar and medaka.
 
-- `data/gene_order_phylogeny/ancGenes.Euteleostomi.list.bz2` (orthology data, same as above): for comparison with chicken.
+- `data/gene_order_phylogeny/ancGenes.Euteleostomi.list.bz2` (orthology data, same as above): for comparisons with chicken.
 
 ## SOURCE DATA for Supp Fig. 5
 
