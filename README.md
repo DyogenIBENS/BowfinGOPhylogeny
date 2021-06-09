@@ -4,6 +4,8 @@
 
 **BowfinGOPhylogeny** is a repository to build distance-based gene-order phylogenies, based on the approach we used in [the bowfin genome paper](https://www.researchsquare.com/article/rs-92055/v1). The notebook shows how to use the python3 scripts stored in `modules/` in conjonction with standard tree building tools to reproduce the 13 ray-finned fish phylogeny we presented.
 
+In addition, we provide all source data used for genome comparisons shown in [the bowfin genome paper](https://www.researchsquare.com/article/rs-92055/v1). See [data/README.md](data/README.md) for details.
+
 ## Quick start with binder
 
 Click the **launch binder** badge above to directly open and interactively run the notebook.
