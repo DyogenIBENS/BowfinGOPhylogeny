@@ -50,8 +50,7 @@ jupyter notebook
 
 ## License
 
-This code may be freely distributed and modified under the terms of the GNU General Public License version 3 (GPL v3)
-and the CeCILL licence version 2 of the CNRS:
+This code may be freely distributed and modified under the terms of the GNU General Public License version 3 (GPL v3) and the CeCILL licence version 2 of the CNRS:
 
 - [LICENSE-GPLv3.txt](LICENSE-GPLv3.txt)
 - [LICENSE-CeCILL.txt](LICENSE-CeCILLv2.txt)
