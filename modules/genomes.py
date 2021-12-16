@@ -23,14 +23,17 @@ def extract_all_genes(genefile):
     with bz2.open(genefile, 'rt') as infile:
         for line in infile:
             line = line.strip().split('\t')
-            sp_genes.add(line[-1])
+            if len(line) == 5:
+                sp_genes.add(line[-1])
+            elif len(line) == 6:
+                sp_genes.add(line[-2])
             if 'random' in line[0]: #working here but not pretty nor general
                 genes_on_random.add(line[-1])
     return sp_genes, genes_on_random
 
 
 
-def filter_families(genes_allsp, non_dup_sp, input_file, output_file):
+def filter_families(genes_allsp, non_dup_sp, input_file, output_file, outfolder='output'):
 
     """
     For gene families (here defined by the Euteleostomi ancestral gene), extract gene families with
@@ -48,9 +51,9 @@ def filter_families(genes_allsp, non_dup_sp, input_file, output_file):
     tmp_count_genes = {}
     markers = 0
     with bz2.open(input_file, "rt") as infile, open(output_file, 'w') as outfile,\
-         open('output/Families_1-to-1.tsv', 'w') as fw1,\
-         open('output/Families_1-to-2.tsv', 'w') as fw2,\
-         open('output/Families_all.tsv', 'w') as fw3:
+         open(f'{outfolder}/Families_1-to-1.tsv', 'w') as fw1,\
+         open(f'{outfolder}/Families_1-to-2.tsv', 'w') as fw2,\
+         open(f'{outfolder}/Families_all.tsv', 'w') as fw3:
 
         #go through all families
         for line in infile:

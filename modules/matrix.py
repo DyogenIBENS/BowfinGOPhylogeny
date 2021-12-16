@@ -160,7 +160,7 @@ def correct_frac_bias(adj_list, adj_list_rev, all_species, d_seq, non_dup):
                         adj_list_rev[dup_sp].add((adj[1]*-1, adj[0]*-1))
 
 
-def make_distance_matrix(adj_list, adj_list_rev, sp_dict, all_species, show=True):
+def make_distance_matrix(adj_list, adj_list_rev, sp_dict, all_species, show=True, outfolder='output'):
 
     """
     Makes a distance matrix from adjacencies data using a normalized breakpoint distance
@@ -202,7 +202,7 @@ def make_distance_matrix(adj_list, adj_list_rev, sp_dict, all_species, show=True
     sns.heatmap(df_data, cmap=sns.cm.rocket, square=True, vmin=0, vmax=1)
 
     plt.tight_layout()
-    plt.savefig('output/distance_matrix.svg', dpi=300)
+    plt.savefig(f'{outfolder}/distance_matrix.svg', dpi=300)
 
     if show:
 
@@ -211,11 +211,11 @@ def make_distance_matrix(adj_list, adj_list_rev, sp_dict, all_species, show=True
     plt.close('all')
 
     #save the matrix as text
-    np.savetxt('output/dist_mat.txt', mat,
+    np.savetxt(f'{outfolder}/dist_mat.txt', mat,
                header=' '.join([sp_dict[i.split()[0]].replace(' ', '_') for i in all_species]))
 
     #format it for R ape package
-    with open('output/dist_mat.txt', 'r') as infile, open('output/dist_mat', 'w') as out:
+    with open(f'{outfolder}/dist_mat.txt', 'r') as infile, open(f'{outfolder}/dist_mat', 'w') as out:
         res = ''
         for i, line in enumerate(infile):
             if i == 0:

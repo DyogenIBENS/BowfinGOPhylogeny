@@ -206,17 +206,18 @@ def dict_to_mat(d_adj_all, all_species, unrandom, sp_with_rm, gar=None, bowfin=N
 
 
         #filter out tetraodon adj
-        idx = all_species.index(sp_with_rm)
-        if vector[idx] == 1:
-            ok = True
-            for i, val in enumerate(vector):
-                if i != idx and val != 0:
-                    ok = False
-                    break
-            if ok:
-                if str(abs(fam[0])) in unrandom:
-                    to_remove.append(fam)
-                    all_adj = all_adj[:-1]
+        if sp_with_rm:
+            idx = all_species.index(sp_with_rm)
+            if vector[idx] == 1:
+                ok = True
+                for i, val in enumerate(vector):
+                    if i != idx and val != 0:
+                        ok = False
+                        break
+                if ok:
+                    if str(abs(fam[0])) in unrandom:
+                        to_remove.append(fam)
+                        all_adj = all_adj[:-1]
 
         #count shared derived adjacencies for the parsimony analysis
         if count:

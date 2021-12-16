@@ -17,7 +17,7 @@ from ete3 import Tree
 
 
 
-def bootstrap_matrix(all_adj, all_species, sp_dict):
+def bootstrap_matrix(all_adj, all_species, sp_dict, outfolder='output'):
 
     """
     Bootstraps the binary matrix 100 times and builds 100 corresponding distance matrices.
@@ -60,15 +60,15 @@ def bootstrap_matrix(all_adj, all_species, sp_dict):
             dmat[i, j] = 1 - nb_sim/float(min(max1, max2))
             dmat[j, i] = dmat[i, j]
 
-        os.makedirs("output/bootstrap/", exist_ok=True)
+        os.makedirs(f"{outfolder}/bootstrap/", exist_ok=True)
 
         #save matrix
-        np.savetxt('output/bootstrap/dist_mat_tmp.txt', dmat,
+        np.savetxt(f'{outfolder}/bootstrap/dist_mat_tmp.txt', dmat,
                    header=' '.join([sp_dict[i.split()[0]].replace(' ', '_') for i in all_species]))
 
         #Format matrix for ape R package
-        with open('output/bootstrap/dist_mat_tmp.txt', 'r') as infile,\
-             open('output/bootstrap/dist_mat_'+str(k)+'.txt', 'w') as out:
+        with open(f'{outfolder}/bootstrap/dist_mat_tmp.txt', 'r') as infile,\
+             open(f'{outfolder}/bootstrap/dist_mat_'+str(k)+'.txt', 'w') as out:
             res = ''
             for i, line in enumerate(infile):
                 if i == 0:
@@ -79,7 +79,7 @@ def bootstrap_matrix(all_adj, all_species, sp_dict):
     print("DONE")
 
 
-def add_bootstrap_support(tree, bootstrap_trees, root=True, branch_length_diff=None):
+def add_bootstrap_support(tree, bootstrap_trees, root=True, branch_length_diff=None, outfolder='output', outgroups=['Chicken', 'Xenopus']):
 
     """
     Adds bootstrap support to a target phylogenetic tree, using bootstraped trees.
@@ -110,7 +110,7 @@ def add_bootstrap_support(tree, bootstrap_trees, root=True, branch_length_diff=N
 
         mytree = Tree(mytree)
 
-        lca = mytree.get_common_ancestor(['Chicken', 'Xenopus'])
+        lca = mytree.get_common_ancestor(outgroups)
         if root:
             mytree.set_outgroup(lca)
 
@@ -135,14 +135,14 @@ def add_bootstrap_support(tree, bootstrap_trees, root=True, branch_length_diff=N
     tree_with_support = get_support(target, mytrees)
 
     # Phylo.draw_ascii(majority_tree)
-    Phylo.write(tree_with_support, 'output/bootstrap_tree.nwk', 'newick')
+    Phylo.write(tree_with_support, f'{outfolder}/bootstrap_tree.nwk', 'newick')
 
     #remove Bio.Phylo formatting that does not work with ete3 conventions...
-    with open('output/bootstrap_tree.nwk', 'r') as infile:
+    with open(f'{outfolder}/bootstrap_tree.nwk', 'r') as infile:
         species_tree = infile.readlines()[0]
     species_tree = species_tree.replace('):', ')')
 
-    with open('output/ete3_formatted_bootstrap_tree.nwk', 'w') as out:
+    with open(f'{outfolder}/ete3_formatted_bootstrap_tree.nwk', 'w') as out:
         out.write(species_tree)
 
     return diff_bl
