@@ -295,6 +295,6 @@ def make_binary_adj_matrix(adj_list, adj_list_rev, all_species, unrandom=None, s
                                          chicken, xenopus)
     #else only make matrix
     else:
-        dict_to_mat(d_adj_all, all_species, unrandom, sp_with_rm)
+        all_adj, to_remove = dict_to_mat(d_adj_all, all_species, unrandom, sp_with_rm)
 
     return all_adj, to_remove
